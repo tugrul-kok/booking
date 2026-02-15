@@ -25,6 +25,7 @@ jobs:
 
       # 3. Build the project and create the .jar artifact
       - name: Build with Maven
+        working-directory: ./back-end
         run: mvn clean package -DskipTests
 
       # 4. Upload the .jar file to the AWS EC2 instance
@@ -34,9 +35,9 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "target/*.jar"
+          source: "back-end/target/*.jar"
           target: "/home/ubuntu/"
-          strip_components: 1
+          strip_components: 2
 
       # 5. Connect to EC2 via SSH and restart the Java service
       - name: Restart Application on EC2

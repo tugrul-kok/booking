@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController // Tells Spring that this is a web endpoint and will return JSON.
 @RequestMapping("/api/v1/bookings") // The base URL address for external access.
+@CrossOrigin(origins = "*")
 public class BookingController {
 
     private final BookingService bookingService;

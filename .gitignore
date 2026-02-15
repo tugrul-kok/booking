@@ -1,6 +1,6 @@
-HELP.md
+back-end/HELP.md
 target/
-.mvn/wrapper/maven-wrapper.jar
+back-end/.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
@@ -14,7 +14,7 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
+back-end/.idea
 *.iws
 *.iml
 *.ipr
@@ -33,4 +33,4 @@ build/
 .vscode/
 
 ### DB Info, check application.properties.example
-src/main/resources/application.properties
+back-end/src/main/resources/application.properties

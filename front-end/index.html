@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Booking.com</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; }
+        .header { background-color: #003580; color: white; padding: 20px; text-align: center; border-radius: 5px; }
+        .room-card { background: white; padding: 15px; margin: 15px 0; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+        .btn { background-color: #0071c2; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 3px; font-weight: bold; }
+        .btn:hover { background-color: #005999; }
+        .btn:disabled { background-color: #ccc; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Tugrul.app Hotel Reservation</h1>
+    <p>Available Rooms</p>
+</div>
+
+<div id="room-list"></div>
+
+<script>
+    // Our API URL (Your own domain)
+    const API_URL = "http://booking.tugrul.app/api/v1/bookings";
+
+    // Fetch rooms when the page loads
+    document.addEventListener("DOMContentLoaded", fetchRooms);
+
+    // For now, we are manually fetching a single room for testing
+    // (In reality, a GET method for /rooms should be written).
+    // But since you mentioned "GET http://booking.tugrul.app/api/v1/bookings" worked in Postman,
+    // I'm assuming you are using that endpoint.
+    function fetchRooms() {
+        // Note: If there is only POST /rooms in the Controller, this code won't work.
+        // For now, we create a static interface and connect the "Book Now" button to the backend.
+
+        const roomList = document.getElementById("room-list");
+        roomList.innerHTML = `
+            <div class="room-card" id="room-1">
+                <div>
+                    <h3>Hilton Amsterdam - Room 101A</h3>
+                    <p>Price: 150.0 € | Status: <span id="status-1" style="color: green;">Available</span></p>
+                </div>
+                <button class="btn" id="btn-1" onclick="bookRoom(1)">Book Now</button>
+            </div>
+        `;
+    }
+
+    // Room Booking Function
+    async function bookRoom(roomId) {
+        const btn = document.getElementById(`btn-${roomId}`);
+        const status = document.getElementById(`status-${roomId}`);
+
+        btn.innerText = "Processing...";
+        btn.disabled = true;
+
+        try {
+            // Request that triggers the lock (Pessimistic Lock) mechanism in the backend!
+            const response = await fetch(`${API_URL}/${roomId}/book`, {
+                method: 'POST'
+            });
+
+            if (response.ok) {
+                alert("Congratulations! Reservation completed successfully.");
+                status.innerText = "Booked";
+                status.style.color = "red";
+                btn.innerText = "Sold Out";
+            } else {
+                const errorText = await response.text();
+                alert("ERROR: " + errorText); // "Sorry, this room was just booked by someone else!"
+                btn.innerText = "Book Now";
+                btn.disabled = false;
+            }
+        } catch (error) {
+            alert("Server unreachable!");
+            btn.innerText = "Book Now";
+            btn.disabled = false;
+        }
+    }
+</script>
+</body>
+</html>
